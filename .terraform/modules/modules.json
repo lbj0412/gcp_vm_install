@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"test-firewall-submodule","Source":"./module/firewall","Dir":"module/firewall"},{"Key":"vpc-module","Source":"./module/network","Dir":"module/network"},{"Key":"firewall-module","Source":"./module/firewall","Dir":"module/firewall"}]}
