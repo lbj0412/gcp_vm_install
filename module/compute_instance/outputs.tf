@@ -29,3 +29,7 @@ output "available_zones" {
   value       = data.google_compute_zones.available.names
 }
 
+output "instances_name" {
+  description = "List of all details for compute instances"
+  value       = google_compute_instance_from_template.compute_instance.*.name
+}

@@ -14,11 +14,7 @@ module "firewall-module" {
   custom_rules = local.custom_rules
 }
 
-### external -ip ###
-resource "google_compute_address" "external-ip" {
-  name   = "lbj-terraform-ip"
-  region = var.region
-}
+
 
 ### Service account ###
 resource "google_service_account" "service_account" {
@@ -28,10 +24,10 @@ resource "google_service_account" "service_account" {
 
 ### 인스턴스 템플릿 생성 ###
 module "instance_template" {
+  source          = "./module/instance_template"
   for_each        = local.instance_tpl
   name_prefix     = each.key
   depends_on      = [module.vpc-module]
-  source          = "./module/instance_template"
   region          = each.value.region
   project_id      = var.project_id
   subnetwork      = each.value.subnetwork
@@ -39,21 +35,22 @@ module "instance_template" {
   startup_script  = each.value.startup_script
   machine_type    = each.value.machine_type
   tags            = each.value.tags
-
 }
 
-# ## 인스턴스 생성 ###
-# module "compute_instance" {
-#   source              = "./module/compute_instance"
-#   region              = var.region
-#   zone                = var.zone
-#   subnetwork          = module.vpc-module.subnets_names[0]
-#   num_instances       = var.num_instances
-#   hostname            = var.instance_name
-#   add_hostname_suffix = var.add_hostname_suffix
-#   instance_template   = module.instance_template.self_link
-#   access_config = [{
-#     nat_ip       = google_compute_address.external-ip.address
-#     network_tier = var.network_tier
-#   }]
-# }
+## 인스턴스 생성 ###
+module "compute_instance" {
+  source              = "./module/compute_instance"
+  depends_on          = [module.instance_template]
+  project_id          = var.project_id
+  region              = var.region
+  zone                = var.zone
+  subnetwork          = module.vpc-module.subnets_names[0]
+  num_instances       = var.num_instances
+  hostname            = var.instance_name
+  add_hostname_suffix = var.add_hostname_suffix
+  instance_template   = module.instance_template["instance-tpl01"].self_link
+  access_config = [{
+    nat_ip       = var.nat_ip
+    network_tier = var.network_tier
+  }]
+}

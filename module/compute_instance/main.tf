@@ -3,7 +3,7 @@ locals {
   num_instances = length(var.static_ips) == 0 ? var.num_instances : length(var.static_ips)
 
   static_ips = concat(var.static_ips, ["NOT_AN_IP"])
-  project_id = length(regexall("/projects/([^/]*)", var.instance_template)) > 0 ? flatten(regexall("/projects/([^/]*)", var.instance_template))[0] : null
+  project_id = var.project_id
 }
 
 ###############
@@ -15,15 +15,22 @@ data "google_compute_zones" "available" {
   region  = var.region
 }
 
+### external -ip ###
+resource "google_compute_address" "external-ip" {
+  count  = var.num_instances
+  name   = var.add_hostname_suffix ? "${local.hostname}-${count.index}" : local.hostname
+  region = var.region
+}
+
 #############
 # Instances
 #############
 
 resource "google_compute_instance_from_template" "compute_instance" {
-  count    = local.num_instances
-  name     = var.add_hostname_suffix ? "${local.hostname}-${format("%02d", count.index + 1)}" : local.hostname
-  project  = local.project_id
-  zone     = var.zone == null ? data.google_compute_zones.available.names[count.index % length(data.google_compute_zones.available.names)] : var.zone
+  count   = local.num_instances
+  name    = var.add_hostname_suffix ? "${local.hostname}-${format("%02d", count.index + 1)}" : local.hostname
+  project = local.project_id
+  zone    = var.zone == null ? data.google_compute_zones.available.names[count.index % length(data.google_compute_zones.available.names)] : var.zone
 
   network_interface {
     network            = var.network
@@ -33,7 +40,7 @@ resource "google_compute_instance_from_template" "compute_instance" {
     dynamic "access_config" {
       for_each = var.access_config
       content {
-        nat_ip       = access_config.value.nat_ip
+        nat_ip       = google_compute_address.external-ip[count.index].address
         network_tier = access_config.value.network_tier
       }
     }

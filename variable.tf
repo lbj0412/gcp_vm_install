@@ -18,16 +18,20 @@ variable "zone" {
 }
 
 variable "num_instances" {
-  default = 1
+  default = 2
 }
 
 variable "instance_name" {
-  default = "test-1"
+  default = "lbj-test"
 }
 
 variable "add_hostname_suffix" {
-  default = false
+  default = true
 }
 variable "network_tier" {
   default = "PREMIUM"
+}
+
+variable "nat_ip" {
+  default = null
 }
