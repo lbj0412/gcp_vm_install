@@ -14,10 +14,6 @@
 
 
 steps:
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/iaas-demo-208601/myimage', '.']
-  options:
-  logging: CLOUD_LOGGING_ONLY
 - id: 'tf init'
   name: 'hashicorp/terraform:1.0.0'
   entrypoint: 'sh'
