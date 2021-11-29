@@ -28,7 +28,6 @@ steps:
   - '-c'
   - 'terraform plan'
 # [END tf-plan]
-
 # [START tf-apply]
 - id: 'tf apply'
   name: 'hashicorp/terraform:1.0.0'
