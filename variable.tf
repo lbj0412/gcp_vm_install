@@ -2,7 +2,7 @@ variable "project_id" {
   default = "iaas-demo-208601"
 }
 variable "network_name" {
-  default = "test-network"
+  default = "lbj-network"
 }
 
 variable "region" {
@@ -18,11 +18,11 @@ variable "zone" {
 }
 
 variable "num_instances" {
-  default = 2
+  default = 1
 }
 
 variable "instance_name" {
-  default = "lbj-test"
+  default = "lbj-test-1"
 }
 
 variable "add_hostname_suffix" {

@@ -1,7 +1,7 @@
 // Subnet name
 locals {
   subnet_01 = "${var.network_name}-subnet-01"
-  subnet_02 = "${var.network_name}-subnet-02"
+  #subnet_02 = "${var.network_name}-subnet-02"
 }
 
 // subnets list
@@ -18,6 +18,12 @@ locals {
     #   subnet_ip             = "10.10.20.0/24"
     #   subnet_region         = "asia-northeast1"
     #   subnet_private_access = "true"
+    # },
+    # {
+    #   subnet_name           = local.subnet_03
+    #   subnet_ip             = "10.10.20.0/24"
+    #   subnet_region         = "asia-northeast1"
+    #   subnet_private_access = "true"
     # }
   ]
 }
@@ -29,7 +35,7 @@ locals {
     lbj-terraform = {
       description          = "allow-all"
       direction            = "INGRESS"
-      action               = "allow"
+      action               = "allow" 
       ranges               = ["0.0.0.0/0"] # source or destination ranges (depends on `direction`)
       use_service_accounts = false         # if `true` targets/sources expect list of instances SA, if false - list of tags
       targets              = null          # target_service_accounts or target_tags depends on `use_service_accounts` value
