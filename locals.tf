@@ -113,18 +113,17 @@ locals {
         nat_ip       = null ## default null
         network_tier = "PREMIUM"
     }] },
-    lbj-test-2 = {
-      region              = "asia-northeast3"
-      zone                = "asia-northeast3-b"
-      subnetwork          = module.vpc-module.subnets_names[0]
-      num_instances       = 1
-      hostname            = "lpj-test-2"
-      add_hostname_suffix = false ## ture /false
-      instance_template   = "instance-tpl01"
-      access_config = [{
-        nat_ip       = null ## default null
-        network_tier = "PREMIUM"
-      }]
-    }
+    # lbj-test-2 = {
+    #   region              = "asia-northeast3"
+    #   zone                = "asia-northeast3-b"
+    #   subnetwork          = module.vpc-module.subnets_names[0]
+    #   num_instances       = 1
+    #   hostname            = "lpj-test-2"
+    #   add_hostname_suffix = false ## ture /false
+    #   instance_template   = "instance-tpl01"
+    #   access_config = [{
+    #     nat_ip       = null ## default null
+    #     network_tier = "PREMIUM"
+    #   }]    }
   }
 }
