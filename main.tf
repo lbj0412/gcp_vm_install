@@ -40,17 +40,15 @@ module "instance_template" {
 ## 인스턴스 생성 ###
 module "compute_instance" {
   source              = "./module/compute_instance"
+  for_each            = local.vm_instance
   depends_on          = [module.instance_template]
   project_id          = var.project_id
-  region              = var.region
-  zone                = var.zone
-  subnetwork          = module.vpc-module.subnets_names[0]
-  num_instances       = var.num_instances
-  hostname            = var.instance_name
-  add_hostname_suffix = var.add_hostname_suffix
-  instance_template   = module.instance_template["instance-tpl01"].self_link
-  access_config = [{
-    nat_ip       = var.nat_ip
-    network_tier = var.network_tier
-  }]
+  region              = each.value.region
+  zone                = each.value.zone
+  subnetwork          = each.value.subnetwork
+  num_instances       = each.value.num_instances
+  hostname            = each.value.hostname
+  add_hostname_suffix = each.value.add_hostname_suffix
+  instance_template   = each.value.instance_template
+  access_config       = each.value.access_config
 }

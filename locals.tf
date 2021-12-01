@@ -35,7 +35,7 @@ locals {
     lbj-terraform = {
       description          = "allow-all"
       direction            = "INGRESS"
-      action               = "allow" 
+      action               = "allow"
       ranges               = ["0.0.0.0/0"] # source or destination ranges (depends on `direction`)
       use_service_accounts = false         # if `true` targets/sources expect list of instances SA, if false - list of tags
       targets              = null          # target_service_accounts or target_tags depends on `use_service_accounts` value
@@ -44,10 +44,10 @@ locals {
         protocol = "tcp"
         ports    = ["1-65535"]
         },
-      #   {
-      #     protocol = "udp"
-      #     ports    = ["6534-6566"]
-      # }
+        #   {
+        #     protocol = "udp"
+        #     ports    = ["6534-6566"]
+        # }
       ]
 
       extra_attributes = {
@@ -80,21 +80,51 @@ locals {
       machine_type   = "e2-medium"
       tags           = ["allow-all"]
     },
-  #   instance-tpl02 = {
-  #     name       = "instance-tpl02"
-  #     region     = "asia-northeast1"
-  #     project_id = var.project_id
-  #     subnetwork = local.subnet_02
-  #     service_account = {
-  #       email  = google_service_account.service_account.email
-  #       scopes = ["cloud-platform"]
-  #     }
-  #     startup_script = <<-EOF
-  #   #! /bin/bash
-  #   sudo apt-get update -y &&  sudo apt-get upgrade -y && sudo apt-get install -y nginx
-  #   EOF
-  #     machine_type   = "e2-medium"
-  #     tags           = ["allow-all"]
-  #   }
- }
+    #   instance-tpl02 = {
+    #     name       = "instance-tpl02"
+    #     region     = "asia-northeast1"
+    #     project_id = var.project_id
+    #     subnetwork = local.subnet_02
+    #     service_account = {
+    #       email  = google_service_account.service_account.email
+    #       scopes = ["cloud-platform"]
+    #     }
+    #     startup_script = <<-EOF
+    #   #! /bin/bash
+    #   sudo apt-get update -y &&  sudo apt-get upgrade -y && sudo apt-get install -y nginx
+    #   EOF
+    #     machine_type   = "e2-medium"
+    #     tags           = ["allow-all"]
+    #   }
+  }
+}
+
+locals {
+  vm_instance = {
+    lbj-test-1 = {
+      region              = "asia-northeast3"
+      zone                = "asia-northeast3-b"
+      subnetwork          = module.vpc-module.subnets_names[0]
+      num_instances       = 1
+      hostname            = "lbj-test-1"
+      add_hostname_suffix = false ## ture /false
+      instance_template   = module.instance_template["instance-tpl01"].self_link
+      access_config = [{
+        nat_ip       = null ## default null
+        network_tier = "PREMIUM"
+    }] },
+    lbj-test-2 = {
+      region              = "asia-northeast3"
+      zone                = "asia-northeast3-b"
+      subnetwork          = module.vpc-module.subnets_names[0]
+      num_instances       = 1
+      hostname            = "lpj-test-2"
+      add_hostname_suffix = false ## ture /false
+      instance_template   = module.instance_template["instance-tpl01"].self_link
+      access_config = [{
+        nat_ip       = null ## default null
+        network_tier = "PREMIUM"
+      }]
+    }
+  }
 }
