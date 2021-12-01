@@ -108,7 +108,7 @@ locals {
       num_instances       = 1
       hostname            = "lbj-test-1"
       add_hostname_suffix = false ## ture /false
-      instance_template   = module.instance_template["instance-tpl01"].self_link
+      instance_template   = "instance-tpl01"
       access_config = [{
         nat_ip       = null ## default null
         network_tier = "PREMIUM"
@@ -120,7 +120,7 @@ locals {
       num_instances       = 1
       hostname            = "lpj-test-2"
       add_hostname_suffix = false ## ture /false
-      instance_template   = module.instance_template["instance-tpl01"].self_link
+      instance_template   = "instance-tpl01"
       access_config = [{
         nat_ip       = null ## default null
         network_tier = "PREMIUM"
