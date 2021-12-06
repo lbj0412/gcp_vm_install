@@ -9,9 +9,7 @@ output "Subnet_names" {
 
 output "Instance_name_ip_address" {
   sensitive = false
-  value     = { for i in keys(local.vm_instance) : i => join("/", module.compute_instance[i].instances_details.*.name, module.compute_instance[i].instances_details.*.network_interface[0].*.access_config[0].*.nat_ip) }
-  ##join("/",[module.compute_instance[i].instances_details.*.name],[module.compute_instance[i].instances_details.*.network_interface[0].access_config[0].nat_ip])}
-  ##value = [for i in module.compute_instance.instances_details : join("/", [i.name], [i.network_interface[0].access_config[0].nat_ip])]
+  value     = [for i in keys(local.vm_instance) : zipmap(module.compute_instance[i].instances_name,flatten(module.compute_instance[i].instances_ip))]
 }
 
 # output "self_link" {

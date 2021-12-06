@@ -33,3 +33,7 @@ output "instances_name" {
   description = "List of all details for compute instances"
   value       = google_compute_instance_from_template.compute_instance.*.name
 }
+
+output "instances_ip" {
+  value = google_compute_instance_from_template.compute_instance.*.network_interface[*].*.access_config[*].*.nat_ip
+}

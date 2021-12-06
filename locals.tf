@@ -32,7 +32,7 @@ locals {
 locals {
   custom_rules = {
     // Example of custom tcp/udp rule
-    lbj-terraform = {
+    lbj-allow-all = {
       description          = "allow-all"
       direction            = "INGRESS"
       action               = "allow"
@@ -44,10 +44,10 @@ locals {
         protocol = "tcp"
         ports    = ["1-65535"]
         },
-        #   {
-        #     protocol = "udp"
-        #     ports    = ["6534-6566"]
-        # }
+           {
+             protocol = "icmp"
+             ports    = []
+         }
       ]
 
       extra_attributes = {
@@ -67,6 +67,9 @@ locals {
     instance-tpl01 = {
       name       = "instance-tpl01"
       region     = "asia-northeast3"
+      source_image         = "ubuntu-1804-bionic-v20211115"
+      source_image_family  = "ubuntu-1804-lts "
+      source_image_project = "ubuntu-os-cloud"
       project_id = var.project_id
       subnetwork = local.subnet_01
       service_account = {
@@ -78,7 +81,7 @@ locals {
   sudo apt-get update -y &&  sudo apt-get upgrade -y && sudo apt-get install -y nginx
   EOF
       machine_type   = "e2-medium"
-      tags           = ["allow-all"]
+      tags           = ["lbj-allow-all"]
     },
     #   instance-tpl02 = {
     #     name       = "instance-tpl02"
@@ -105,10 +108,10 @@ locals {
       region              = "asia-northeast3"
       zone                = "asia-northeast3-b"
       subnetwork          = module.vpc-module.subnets_names[0]
-      num_instances       = 1
+      num_instances       = 3
       hostname            = "lbj-test-1"
-      add_hostname_suffix = false ## ture /false
-      instance_template   = "instance-tpl01"
+      add_hostname_suffix = true ## true /false
+      instance_template   = module.instance_template["instance-tpl01"].instance_template.self_link
       access_config = [{
         nat_ip       = null ## default null
         network_tier = "PREMIUM"

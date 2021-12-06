@@ -26,6 +26,9 @@ resource "google_service_account" "service_account" {
 module "instance_template" {
   source          = "./module/instance_template"
   for_each        = local.instance_tpl
+  source_image         = each.value.source_image
+  source_image_family  = each.value.source_image_family
+  source_image_project = each.value.source_image_project
   name_prefix     = each.key
   depends_on      = [module.vpc-module]
   region          = each.value.region
